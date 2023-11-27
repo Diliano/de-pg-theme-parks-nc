@@ -3,6 +3,8 @@ from db.seed import seed
 from db.connection import db
 from db.data.index import index as data
 
+# Do not change these tests
+
 
 @pytest.fixture(scope="module")
 def run_seed():
