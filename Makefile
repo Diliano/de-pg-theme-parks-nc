@@ -93,4 +93,4 @@ seed:
 
 ###############################################################################################
 
-all: requirements dev-setup run-checks setup-database seed
+all: requirements dev-setup setup-database run-checks seed
