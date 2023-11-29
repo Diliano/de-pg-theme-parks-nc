@@ -2,7 +2,7 @@
 
 This sprint covers two days worth of content.
 
-Day 1 tasks: LINK TO DE-PG-THEME-PARKS-SEEDING
+Day 1 tasks:  https://l2c.northcoders.com/courses/de2-backend/theme-parks-seeding
 
 Day 2 tasks: LINK TO DE-PG-THEME-PARKS-SERVERS
 
