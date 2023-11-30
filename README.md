@@ -2,9 +2,9 @@
 
 This sprint covers two days worth of content.
 
-Day 1 tasks:  https://l2c.northcoders.com/courses/de2-backend/theme-parks-seeding
+Day 1 tasks:  [theme-park-seeding](https://l2c.northcoders.com/courses/de2-backend/theme-parks-seeding)
 
-Day 2 tasks: LINK TO DE-PG-THEME-PARKS-SERVERS
+Day 2 tasks: [theme-park-servers](https://l2c.northcoders.com/courses/de2-backend/theme-parks-servers)
 
 If you are pairing you will need to share your user ids with your partner.
 
