@@ -85,7 +85,7 @@ run-checks: security-test run-flake unit-test check-coverage
 
 ## Set up database
 setup-database: 
-	$(call execute_in_env, PYTHONPATH=${PYTHONPATH} psql -f ./db/theme-parks.sql)
+	psql -f ./db/theme-parks.sql
 
 ## Run seed
 seed:
@@ -93,4 +93,4 @@ seed:
 
 ###############################################################################################
 
-all: requirements dev-setup setup-database run-checks seed
+all: requirements dev-setup setup-database seed run-checks
