@@ -6,7 +6,7 @@ from db.data.index import index as data
 # Do not change these tests
 
 
-@pytest.fixture(scope="module")
+@pytest.fixture(scope="session")
 def run_seed():
     '''Runs seed before starting tests, yields, runs tests,
        then closes connection to db'''
