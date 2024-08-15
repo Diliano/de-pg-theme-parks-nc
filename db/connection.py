@@ -1,2 +1,9 @@
-# Create your connection to the DB in this file #
-# Ensure that 'db' is a variable that can be accessed #
+# Create your create_conn function to return a database connection object    #
+
+def create_conn():
+    pass
+
+# Create a close_db function that closes a passed database connection object #
+
+def close_db():
+    pass
