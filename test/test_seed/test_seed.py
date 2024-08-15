@@ -1,22 +1,23 @@
 import pytest
 from db.seed import seed
-from db.connection import db
+from db.connection import create_conn, close_db
 from db.data.index import index as data
 
 # Do not change these tests
 
 
 @pytest.fixture(scope="session")
-def run_seed():
+def db():
     '''Runs seed before starting tests, yields, runs tests,
        then closes connection to db'''
-    seed(**data)
-    yield
-    db.close()
+    test_db = create_conn()
+    seed(test_db, **data)
+    yield test_db
+    close_db(test_db)
 
 
 # Parks table tests
-def test_parks_table_exists(run_seed):
+def test_parks_table_exists(db):
     '''Tests if parks table exists'''
     base_query = "SELECT EXISTS (SELECT FROM information_schema.tables \
                   WHERE table_name = 'parks')"
@@ -24,7 +25,7 @@ def test_parks_table_exists(run_seed):
     assert expect == [[True]]
 
 
-def test_parks_table_has_park_id_column_as_serial_primary_key(run_seed):
+def test_parks_table_has_park_id_column_as_serial_primary_key(db):
     '''Tests if parks table has park_id as serial primary key'''
     base_query = "SELECT column_name, data_type, column_default \
                   FROM information_schema.columns \
@@ -36,7 +37,7 @@ def test_parks_table_has_park_id_column_as_serial_primary_key(run_seed):
     assert expect[0][2] == "nextval('parks_park_id_seq'::regclass)"
 
 
-def test_parks_table_has_park_name_column(run_seed):
+def test_parks_table_has_park_name_column(db):
     '''Tests if parks table has park name column'''
     base_query = "SELECT column_name, data_type, column_default \
                   FROM information_schema.columns \
@@ -46,7 +47,7 @@ def test_parks_table_has_park_name_column(run_seed):
     assert expect == [["park_name", "character varying", None]]
 
 
-def test_parks_table_has_park_id_column(run_seed):
+def test_parks_table_has_park_id_column(db):
     '''Tests if parks table has park id column'''
     base_query = "SELECT column_name \
                   FROM information_schema.columns \
@@ -56,7 +57,7 @@ def test_parks_table_has_park_id_column(run_seed):
     assert expect == [["park_id"]]
 
 
-def test_parks_table_has_year_opened_column(run_seed):
+def test_parks_table_has_year_opened_column(db):
     '''Tests if parks table has year opened column'''
     base_query = "SELECT column_name \
                   FROM information_schema.columns \
@@ -66,7 +67,7 @@ def test_parks_table_has_year_opened_column(run_seed):
     assert expect == [["year_opened"]]
 
 
-def test_parks_table_has_annual_attendance_column(run_seed):
+def test_parks_table_has_annual_attendance_column(db):
     '''Tests if parks table has annual attendance column'''
     base_query = "SELECT column_name \
                   FROM information_schema.columns \
@@ -77,7 +78,7 @@ def test_parks_table_has_annual_attendance_column(run_seed):
 
 
 # Rides table tests
-def test_rides_table_exists(run_seed):
+def test_rides_table_exists(db):
     '''Tests if rides table exists'''
     base_query = "SELECT EXISTS (SELECT FROM information_schema.tables \
                   WHERE table_name = 'rides');"
@@ -85,7 +86,7 @@ def test_rides_table_exists(run_seed):
     assert expect == [[True]]
 
 
-def test_rides_table_has_ride_id_column_as_serial_primary_key(run_seed):
+def test_rides_table_has_ride_id_column_as_serial_primary_key(db):
     '''Tests if rides table has ride id as serial primary key'''
     base_query = "SELECT column_name, data_type, column_default \
                   FROM information_schema.columns \
@@ -97,7 +98,7 @@ def test_rides_table_has_ride_id_column_as_serial_primary_key(run_seed):
     assert expect[0][2] == "nextval('rides_ride_id_seq'::regclass)"
 
 
-def test_rides_table_has_ride_name_column(run_seed):
+def test_rides_table_has_ride_name_column(db):
     '''Tests if rides table has ride name column'''
     base_query = "SELECT column_name, data_type, column_default \
                   FROM information_schema.columns \
@@ -107,7 +108,7 @@ def test_rides_table_has_ride_name_column(run_seed):
     assert expect == [["ride_name", "character varying", None]]
 
 
-def test_rides_table_has_ride_id_column(run_seed):
+def test_rides_table_has_ride_id_column(db):
     '''Tests if rides table has ride id column'''
     base_query = "SELECT column_name \
                   FROM information_schema.columns \
@@ -117,7 +118,7 @@ def test_rides_table_has_ride_id_column(run_seed):
     assert expect == [["ride_id"]]
 
 
-def test_rides_table_has_year_opened_column(run_seed):
+def test_rides_table_has_year_opened_column(db):
     '''Tests if rides table has year opened column'''
     base_query = "SELECT column_name \
                   FROM information_schema.columns \
@@ -127,7 +128,7 @@ def test_rides_table_has_year_opened_column(run_seed):
     assert expect == [["year_opened"]]
 
 
-def test_rides_table_has_votes_column(run_seed):
+def test_rides_table_has_votes_column(db):
     '''Tests if rides table has votes column'''
     base_query = "SELECT column_name \
                   FROM information_schema.columns \
@@ -138,7 +139,7 @@ def test_rides_table_has_votes_column(run_seed):
 
 
 # Data insertion
-def test_parks_data_has_been_inserted_correctly(run_seed):
+def test_parks_data_has_been_inserted_correctly(db):
     '''Tests if parks data has been inserted correctly'''
     base_query = "SELECT * FROM parks;"
     parks = db.run(base_query)
@@ -153,7 +154,7 @@ def test_parks_data_has_been_inserted_correctly(run_seed):
         assert isinstance(annual_attendance, int)
 
 
-def test_rides_data_has_been_inserted_correctly(run_seed):
+def test_rides_data_has_been_inserted_correctly(db):
     '''Tests if rides data has been inserted correctly'''
     base_query = "SELECT * FROM rides;"
     rides = db.run(base_query)
