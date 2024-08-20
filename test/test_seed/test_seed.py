@@ -11,10 +11,16 @@ def db():
     '''Runs seed before starting tests. 
        Yields a database connection object to be used in tests. 
        Closes connection to db after tests have ran'''
-    test_db = create_conn()
-    seed(test_db, **data)
-    yield test_db
-    close_db(test_db)
+    test_db = None
+    try:
+        test_db = create_conn()
+        seed(test_db, **data)
+        yield test_db
+    except Exception as e:
+        print(e)
+    finally:
+        if test_db:
+            close_db(test_db)
 
 
 # Parks table tests
