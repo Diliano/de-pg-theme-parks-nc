@@ -8,8 +8,9 @@ from db.data.index import index as data
 
 @pytest.fixture(scope="session")
 def db():
-    '''Runs seed before starting tests, yields, runs tests,
-       then closes connection to db'''
+    '''Runs seed before starting tests. 
+       Yields a database connection object to be used in tests. 
+       Closes connection to db after tests have ran'''
     test_db = create_conn()
     seed(test_db, **data)
     yield test_db
