@@ -1,4 +1,3 @@
-from db.connection import db
 # You will need to write your database connection file
 # before being able to run your seed file
 
