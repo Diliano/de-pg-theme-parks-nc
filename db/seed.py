@@ -14,4 +14,12 @@ def seed(db, parks, rides, stalls, foods):
 
 def create_parks(db):
     '''Create your parks table in the query below'''
-    return db.run("")
+    create_query = """
+        CREATE TABLE parks (
+            park_id SERIAL PRIMARY KEY, 
+            park_name VARCHAR(255) NOT NULL, 
+            year_opened INTEGER NOT NULL, 
+            annual_attendance INTEGER NOT NULL
+        );
+    """
+    return db.run(sql=create_query)
