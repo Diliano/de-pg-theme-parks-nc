@@ -1,3 +1,5 @@
+from pg8000.native import literal
+from db.data.index import index as data
 # You will need to write your database connection file
 # before being able to run your seed file
 
@@ -11,6 +13,7 @@ def seed(db, parks, rides, stalls, foods):
     db.run("DROP TABLE IF EXISTS parks;")
     create_parks(db)
     create_rides(db)
+    insert_parks_data(db)
 
 
 def create_parks(db):
@@ -37,3 +40,13 @@ def create_rides(db):
         );
     """
     return db.run(sql=create_query)
+
+
+def insert_parks_data(db):
+    parks = data["parks"]
+    insert_query = """INSERT INTO parks (park_name, year_opened, annual_attendance) VALUES """
+    rows_to_insert = (""", """).join([
+        f"""({literal(park["park_name"])}, {literal(park["year_opened"])}, {literal(park["annual_attendance"])})""" for park in parks
+    ])
+    insert_query += rows_to_insert
+    return db.run(sql=insert_query)
