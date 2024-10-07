@@ -9,9 +9,9 @@ import re
 PORT = 8888
 socket = ("", PORT)
 
-REGEX_GET_REQUEST_RIDE_ID = re.compile(r"/ride/(\d)")
-REGEX_POST_REQUEST_PARK_ID = re.compile(r"/parks/(\d)/rides")
-REGEX_PATCH_REQUEST_RIDE_ID = re.compile(r"/rides/(\d)")
+REGEX_GET_RIDE_BY_ID = re.compile(r"/ride/(\d)")
+REGEX_POST_NEW_RIDE_PARK_ID = re.compile(r"/parks/(\d)/rides")
+REGEX_PATCH_OR_DELETE_RIDE_ID = re.compile(r"/rides/(\d)")
 
 
 class Handler(BaseHTTPRequestHandler):
@@ -32,14 +32,14 @@ class Handler(BaseHTTPRequestHandler):
             body = json.dumps({"parks": parks_data})
             self.create_response(200, body)
 
-        if REGEX_GET_REQUEST_RIDE_ID.search(self.path):
-            ride_id = REGEX_GET_REQUEST_RIDE_ID.search(self.path).group(1)
+        if REGEX_GET_RIDE_BY_ID.search(self.path):
+            ride_id = REGEX_GET_RIDE_BY_ID.search(self.path).group(1)
             body = json.dumps({"ride": get_ride_data(ride_id)})
             self.create_response(200, body)
 
     def do_POST(self):
-        if REGEX_POST_REQUEST_PARK_ID.search(self.path):
-            park_id = REGEX_POST_REQUEST_PARK_ID.search(self.path).group(1)
+        if REGEX_POST_NEW_RIDE_PARK_ID.search(self.path):
+            park_id = REGEX_POST_NEW_RIDE_PARK_ID.search(self.path).group(1)
             content_length = int(self.headers["Content-Length"])
             request_body = self.rfile.read(content_length).decode("utf-8")
             parsed_body = json.loads(request_body)
@@ -57,8 +57,8 @@ class Handler(BaseHTTPRequestHandler):
             self.create_response(201, body)
 
     def do_PATCH(self):
-        if REGEX_PATCH_REQUEST_RIDE_ID.search(self.path):
-            ride_id = REGEX_PATCH_REQUEST_RIDE_ID.search(self.path).group(1)
+        if REGEX_PATCH_OR_DELETE_RIDE_ID.search(self.path):
+            ride_id = REGEX_PATCH_OR_DELETE_RIDE_ID.search(self.path).group(1)
             content_length = int(self.headers["Content-Length"])
             request_body = self.rfile.read(content_length).decode("utf-8")
             parsed_body = json.loads(request_body)
@@ -72,6 +72,16 @@ class Handler(BaseHTTPRequestHandler):
             close_db(db)
             body = json.dumps({"ride": get_ride_data(ride_id)})
             self.create_response(200, body)
+
+    def do_DELETE(self):
+        if REGEX_PATCH_OR_DELETE_RIDE_ID.search(self.path):
+            ride_id = REGEX_PATCH_OR_DELETE_RIDE_ID.search(self.path).group(1)
+            db = create_conn()
+            delete_query = f"""DELETE FROM rides WHERE ride_id = {literal(ride_id)}"""
+            db.run(sql=delete_query)
+            close_db(db)
+            self.send_response(204)
+            self.end_headers()
 
 
 with HTTPServer(socket, Handler) as server:
