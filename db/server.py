@@ -31,6 +31,7 @@ class Handler(BaseHTTPRequestHandler):
             id = REGEX_RIDE_ID.search(self.path).group(1)
             body = json.dumps({"ride": get_ride_data(id)})
             self.create_response(body)
+            
 
 
 with HTTPServer(socket, Handler) as server:
