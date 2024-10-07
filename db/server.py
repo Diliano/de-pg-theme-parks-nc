@@ -1,5 +1,5 @@
 from http.server import BaseHTTPRequestHandler, HTTPServer
-from db.utils.utils import get_parks_data, get_ride_data
+from db.utils.utils import get_parks_data, get_extended_park_data, get_ride_data
 from connection import create_conn, close_db
 from pg8000.native import literal
 import json
@@ -10,6 +10,7 @@ PORT = 8888
 socket = ("", PORT)
 
 REGEX_GET_RIDE_BY_ID = re.compile(r"/ride/(\d)")
+REGEX_GET_PARK_BY_ID = re.compile(r"/parks/(\d)")
 REGEX_POST_NEW_RIDE_PARK_ID = re.compile(r"/parks/(\d)/rides")
 REGEX_PATCH_OR_DELETE_RIDE_ID = re.compile(r"/rides/(\d)")
 
@@ -35,6 +36,11 @@ class Handler(BaseHTTPRequestHandler):
         if REGEX_GET_RIDE_BY_ID.search(self.path):
             ride_id = REGEX_GET_RIDE_BY_ID.search(self.path).group(1)
             body = json.dumps({"ride": get_ride_data(ride_id)})
+            self.create_response(200, body)
+
+        if REGEX_GET_PARK_BY_ID.search(self.path):
+            park_id = REGEX_GET_PARK_BY_ID.search(self.path).group(1)
+            body = json.dumps({"park": get_extended_park_data(park_id)})
             self.create_response(200, body)
 
     def do_POST(self):
