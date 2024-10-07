@@ -5,9 +5,12 @@ from copy import deepcopy
 # Create your utility functions here, feel free to make additional files
 
 
-def get_parks_data():
+def get_parks_data(column=None):
     db = create_conn()
-    parks_data = db.run("""SELECT * FROM parks;""")
+    if column:
+        parks_data = db.run(f"""SELECT * FROM parks ORDER BY {column} DESC;""")
+    else:
+        parks_data = db.run("""SELECT * FROM parks;""")
     formatted_data = [
         {
             "park_id": park[0],
