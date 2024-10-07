@@ -1,4 +1,4 @@
-from db.utils.utils import get_parks_data, format_raw_rides_data, get_ride_data
+from db.utils.utils import get_parks_data, get_extended_park_data, format_raw_rides_data, get_ride_data
 from db.data.index import index as data
 from copy import copy
 # Write the tests for your utility functions here
@@ -37,6 +37,24 @@ class TestGetParksData:
         # Assert
         assert result == expected
 
+
+class TestGetExtendedParkData:
+    def test_get_extended_park_data_returns_formatted_data(self):
+        # Arrange
+        test_id = 1
+        expected = {
+            "park_id": 1,
+            "park_name": "Thorpe Park",
+            "year_opened": 1979,
+            "annual_attendance": 1700000,
+            "average_votes": 4.8,
+            "ride_count": 6
+        }
+        # Act
+        result = get_extended_park_data(1)
+        # Assert
+        assert result == expected
+        
 
 class TestFormatRawRidesData:
     def test_format_raw_rides_data_returns_formatted_data(self):

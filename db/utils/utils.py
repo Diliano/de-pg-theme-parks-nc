@@ -21,6 +21,22 @@ def get_parks_data():
     return formatted_data
 
 
+def get_extended_park_data(id):
+    db = create_conn()
+    park_data = db.run(f"""SELECT * FROM parks WHERE park_id = {literal(id)}""")[0]
+    aggregate_rides_data = db.run(f"""SELECT AVG(votes), COUNT(votes) FROM rides WHERE park_id = {literal(id)}""")[0]
+    formatted_data = {
+        "park_id": park_data[0],
+        "park_name": park_data[1],
+        "year_opened": park_data[2],
+        "annual_attendance": park_data[3],
+        "average_votes": round(float(aggregate_rides_data[0]), 1),
+        "ride_count": aggregate_rides_data[1]
+    }
+    close_db(db)
+    return formatted_data
+
+
 def format_raw_rides_data():
     rides_data = deepcopy(data["rides"])
     parks_data = get_parks_data()
