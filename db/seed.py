@@ -1,6 +1,6 @@
 from pg8000.native import literal
 from db.data.index import index as data
-from db.utils.format_rides import format_raw_rides_data
+from db.utils.utils import format_raw_rides_data
 # You will need to write your database connection file
 # before being able to run your seed file
 

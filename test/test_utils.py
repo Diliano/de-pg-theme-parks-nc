@@ -1,4 +1,4 @@
-from db.utils.format_rides import get_parks_data, format_rides_data
+from db.utils.utils import get_parks_data, format_rides_data
 from db.data.index import index as data
 from copy import copy
 # Write the tests for your utility functions here
