@@ -1,6 +1,6 @@
 from pg8000.native import literal
 from db.data.index import index as data
-from db.utils.format_rides import format_rides_data
+from db.utils.format_rides import format_raw_rides_data
 # You will need to write your database connection file
 # before being able to run your seed file
 
@@ -55,7 +55,7 @@ def insert_parks_data(db):
 
 
 def insert_rides_data(db):
-    rides = format_rides_data()
+    rides = format_raw_rides_data()
     insert_query = """INSERT INTO rides (park_id, ride_name, year_opened, votes) VALUES """
     rows_to_insert = (""", """).join([
         f"""({literal(ride["park_id"])}, {literal(ride["ride_name"])}, {literal(ride["year_opened"])}, {literal(ride["votes"])})""" for ride in rides
