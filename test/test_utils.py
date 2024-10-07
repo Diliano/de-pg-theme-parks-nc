@@ -1,4 +1,4 @@
-from db.utils.utils import get_parks_data, format_rides_data
+from db.utils.utils import get_parks_data, format_raw_rides_data, get_ride_data
 from db.data.index import index as data
 from copy import copy
 # Write the tests for your utility functions here
@@ -38,8 +38,8 @@ class TestGetParksData:
         assert result == expected
 
 
-class TestFormatRidesData:
-    def test_format_rides_data_returns_formatted_data(self):
+class TestFormatRawRidesData:
+    def test_format_raw_rides_data_returns_formatted_data(self):
         # Arrange
         expected = [
             {
@@ -164,15 +164,46 @@ class TestFormatRidesData:
             }
         ]
         # Act
-        result = format_rides_data()
+        result = format_raw_rides_data()
         # Assert
         assert result == expected
 
-    def test_format_rides_data_leaves_original_data_unchanged(self):
+    def test_format_raw_rides_data_leaves_original_data_unchanged(self):
         # Arrange
         rides_data = data["rides"]
         # Act
-        result = format_rides_data()
+        result = format_raw_rides_data()
         # Assert
         assert rides_data is not result
         assert data["rides"] is not result
+
+
+class TestGetRideData:
+    def test_get_ride_data_returns_formatted_data(self):
+        # Arrange
+        test_id = 1
+        expected = {
+            "ride_id": 1,
+            "park_id": 1,
+            "ride_name": "Colossus",
+            "year_opened": 2002,
+            "votes": 5
+	    }
+        # Act
+        result = get_ride_data(test_id)
+        # Assert
+        assert result == expected
+
+        # Arrange
+        test_id = 2
+        expected = {
+            "ride_id": 2,
+            "park_id": 1,
+            "ride_name": "Stealth",
+            "year_opened": 2006,
+            "votes": 4
+	    }
+        # Act
+        result = get_ride_data(test_id)
+        # Assert
+        assert result == expected
